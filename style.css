@@ -942,6 +942,102 @@ body {
   }
 }
 
+/* --- Responsive para móvil --- */
+@media (max-width: 768px) {
+  .smart-alert-overlay {
+    padding: 16px;
+  }
+  
+  .smart-alert-card {
+    max-width: 100%;
+    padding: 20px;
+    border-radius: 16px;
+  }
+  
+  .smart-alert-header {
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+  }
+  
+  .smart-alert-header i {
+    font-size: 1.8rem;
+  }
+  
+  .smart-alert-header h2 {
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+  }
+  
+  .quake-quick-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .quick-mag {
+    font-size: 1.8rem;
+    padding: 6px 12px;
+  }
+  
+  .quick-details strong {
+    font-size: 0.85rem;
+  }
+  
+  .quick-details p {
+    font-size: 0.75rem;
+  }
+  
+  .countdown-timers {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .timer-box {
+    padding: 10px 12px;
+  }
+  
+  .timer-label {
+    font-size: 0.65rem;
+  }
+  
+  .timer-val {
+    font-size: 0.9rem;
+  }
+  
+  .timer-val strong {
+    font-size: 1.2rem;
+  }
+  
+  .btn-dismiss-alert {
+    padding: 14px;
+    font-size: 0.85rem;
+  }
+  
+  .sos-fab {
+    bottom: 20px;
+    left: 20px;
+    padding: 12px 20px;
+    font-size: 0.9rem;
+  }
+  
+  .sos-fab i {
+    font-size: 1rem;
+  }
+  
+  .audio-ambient-status {
+    bottom: 70px;
+    left: 16px;
+    padding: 8px 16px;
+  }
+  
+  .audio-ambient-status span {
+    font-size: 0.75rem;
+  }
+}
+
 @keyframes flash {
   from { opacity: 0.3; }
   to { opacity: 1; }
