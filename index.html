@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ONDA">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0d1424">
+  <meta name="description" content="Sistema de alerta sísmica en tiempo real para Venezuela con modo de emergencia SOS">
+  <meta name="application-name" content="ONDA">
+  <meta name="msapplication-TileColor" content="#0d1424">
+  <meta name="msapplication-config" content="browserconfig.xml">
+  <meta name="author" content="Cesar Sarmiento">
+  <meta name="copyright" content="© 2026 Cesar Sarmiento. Todos los derechos reservados.">
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- Apple Touch Icon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="icon-120.png">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+  
+  <title>ONDA - Pulso Sísmico en Tiempo Real</title>
+  
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  
+  <!-- Local Styles -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then((registration) => {
+            console.log('[SW] Service Worker registrado:', registration.scope);
+          })
+          .catch((error) => {
+            console.error('[SW] Error registrando Service Worker:', error);
+          });
+      });
+    }
+  </script>
+</head>
+<body>
+  <!-- Dynamic Pulse Background Canvas -->
+  <canvas id="pulse-canvas"></canvas>
+
+  <!-- Smart Alert Overlay Panel -->
+  <div class="smart-alert-overlay hidden" id="smart-alert-panel">
+    <div class="smart-alert-card">
+      <div class="smart-alert-header">
+        <i class="fa-solid fa-triangle-exclamation animate-flash-fast"></i>
+        <h2>ALERTA SÍSMICA TEMPRANA</h2>
+      </div>
+      <div class="smart-alert-body">
+        <div class="quake-quick-info">
+          <div class="quick-mag" id="alert-mag">M 7.8</div>
+          <div class="quick-details">
+            <strong id="alert-place">Cerca de la Costa de Guerrero, México</strong>
+            <p>Profundidad: <span id="alert-depth">30</span> km | Distancia: <span id="alert-distance">150</span> km</p>
+          </div>
+        </div>
+        
+        <!-- Waves countdown timers -->
+        <div class="countdown-timers">
+          <div class="timer-box" id="timer-p">
+            <span class="timer-label">Onda P (Compresión - Aviso Inicial)</span>
+            <div class="timer-val">Llegando en <strong id="time-p-val">--</strong> s</div>
+            <div class="timer-bar"><span style="width: 0%" id="bar-p"></span></div>
+          </div>
+          <div class="timer-box" id="timer-s">
+            <span class="timer-label">Onda S (Corte - Vibración Fuerte)</span>
+            <div class="timer-val">Llegando en <strong id="time-s-val">--</strong> s</div>
+            <div class="timer-bar"><span style="width: 0%" id="bar-s"></span></div>
+          </div>
+          <div class="timer-box alert-severe-bg" id="timer-surf">
+            <span class="timer-label">Onda Superficial (Sacudida Principal)</span>
+            <div class="timer-val">Arribo en <strong id="time-surf-val">--</strong> s</div>
+            <div class="timer-bar"><span style="width: 0%" id="bar-surf"></span></div>
+          </div>
+        </div>
+
+        <button class="btn-dismiss-alert" id="btn-close-alert">Silenciar / Cerrar Alerta</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Humming Indicator Overlay (Web Audio API) -->
+  <div class="audio-ambient-status" id="audio-toggle-btn" title="Activar/Desactivar Hum Sísmico (Audio)">
+    <i class="fa-solid fa-volume-xmark" id="audio-icon"></i>
+    <span id="audio-text">Hum Sísmico Desactivado</span>
+    <div class="audio-waves" id="audio-waves-container">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- Dashboard Container -->
+  <div class="dashboard-wrapper">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="pulse-ring"></div>
+        <h1>ONDA</h1>
+        <span class="tagline">PULSO SÍSMICO GLOBAL</span>
+      </div>
+      <div class="system-status">
+        <span class="status-dot green"></span>
+        <span class="status-text">Conexión USGS Estable</span>
+        <div class="api-selector">
+          <select id="api-source-select">
+            <option value="auto">Auto (USGS + EMSC)</option>
+            <option value="usgs">USGS Principal</option>
+            <option value="emsc">EMSC Europeo</option>
+          </select>
+        </div>
+        <span class="last-update" id="last-update-text">Actualizado: hace 0s</span>
+      </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="dashboard-grid">
+      
+      <!-- Left Column: Seismic Feed -->
+      <section class="panel feed-panel">
+        <div class="panel-header">
+          <i class="fa-solid fa-rss text-alert"></i>
+          <h2>Actividad Reciente</h2>
+          <div class="feed-filter">
+            <select id="min-mag-filter">
+              <option value="all">Todos los sismos</option>
+              <option value="2.5">M 2.5+</option>
+              <option value="4.5">M 4.5+</option>
+              <option value="6.0">M 6.0+</option>
+            </select>
+          </div>
+        </div>
+        <div class="panel-content scrollable-y" id="earthquake-list">
+          <!-- Dynamically populated -->
+          <div class="loading-state">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+            <p>Obteniendo pulsos de la Tierra...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Center Column: Visualizer & Map -->
+      <section class="center-column">
+        <!-- Stats Row -->
+        <div class="stats-row">
+          <div class="stat-card" id="stat-gsi">
+            <div class="stat-label">Índice Sísmico (GSI)</div>
+            <div class="stat-val animate-pulse">--</div>
+            <div class="stat-desc">Energía liberada (última hora)</div>
+          </div>
+          <div class="stat-card" id="stat-max">
+            <div class="stat-label">Magnitud Máxima</div>
+            <div class="stat-val text-warn">--</div>
+            <div class="stat-desc" id="stat-max-loc">Cargando...</div>
+          </div>
+          <div class="stat-card" id="stat-count">
+            <div class="stat-label">Sismos Recientes</div>
+            <div class="stat-val text-info">--</div>
+            <div class="stat-desc">Eventos en la última hora</div>
+          </div>
+        </div>
+
+        <!-- Leaflet Map Panel -->
+        <div class="panel map-panel">
+          <div id="map"></div>
+          <!-- Proximity Alert Banner overlay -->
+          <div class="proximity-banner hidden" id="proximity-banner">
+            <i class="fa-solid fa-circle-exclamation text-alert animate-ping"></i>
+            <div class="proximity-text">
+              <strong>Alerta de Cercanía:</strong> Sismo detectado a <span id="prox-dist">--</span> km de tu ubicación.
+            </div>
+            <button class="close-banner" id="close-prox-banner">&times;</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Controls & Analytics -->
+      <section class="panel control-panel">
+        <div class="panel-header">
+          <i class="fa-solid fa-sliders text-accent"></i>
+          <h2>Control de Simulación</h2>
+        </div>
+        <div class="panel-content">
+          <div class="control-group">
+            <h3>Simular Sismo</h3>
+            <p class="control-desc">Genera una onda expansiva en tiempo real y evalúa la respuesta visual y acústica del sistema.</p>
+            
+            <div class="slider-control">
+              <div class="slider-label-row">
+                <span>Distancia simulada:</span>
+                <span class="slider-val" id="val-sim-distance">150 km</span>
+              </div>
+              <input type="range" id="input-sim-distance" min="10" max="1000" value="150" step="10" style="width: 100%; accent-color: var(--color-accent); cursor: pointer;">
+            </div>
+
+            <div class="slider-control" style="margin-top: 10px; margin-bottom: 14px;">
+              <div class="slider-label-row">
+                <span>Profundidad simulada:</span>
+                <span class="slider-val" id="val-sim-depth">30 km</span>
+              </div>
+              <input type="range" id="input-sim-depth" min="0" max="700" value="30" step="5" style="width: 100%; accent-color: var(--color-accent); cursor: pointer;">
+            </div>
+
+            <div class="sim-buttons">
+              <button class="btn-sim" data-mag="3.5" style="--btn-color: var(--color-low);">M 3.5 (Leve)</button>
+              <button class="btn-sim" data-mag="5.2" style="--btn-color: var(--color-mid);">M 5.2 (Moderado)</button>
+              <button class="btn-sim" data-mag="7.8" style="--btn-color: var(--color-high);">M 7.8 (Fuerte)</button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h3>Estado del Pulso</h3>
+            <div class="pulse-stats">
+              <div class="pstat-row">
+                <span>Color de Fondo:</span>
+                <span class="pstat-val" id="pstat-bg-color">Tranquilo</span>
+              </div>
+              <div class="pstat-row">
+                <span>Frecuencia de Respiración:</span>
+                <span class="pstat-val" id="pstat-resp-rate">1.2 Hz</span>
+              </div>
+              <div class="pstat-row">
+                <span>Ondas Activas:</span>
+                <span class="pstat-val" id="pstat-active-waves">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h3>Simulación de Red</h3>
+            <p class="control-desc">Prueba la respuesta de la app con conexiones lentas.</p>
+            
+            <div class="toggle-row">
+              <span>Simular Latencia (2s)</span>
+              <div class="toggle-switch">
+                <input type="checkbox" id="toggle-latency">
+                <label for="toggle-latency" class="slider"></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h3>Modo Debug</h3>
+            <p class="control-desc">Muestra FPS y estadísticas de rendimiento en tiempo real.</p>
+            
+            <div class="toggle-row">
+              <span>Mostrar Stats FPS</span>
+              <div class="toggle-switch">
+                <input type="checkbox" id="toggle-debug">
+                <label for="toggle-debug" class="slider"></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h3>Geolocalización</h3>
+            <div class="geo-status" id="geo-status-box">
+              <i class="fa-solid fa-location-crosshairs geo-icon"></i>
+              <div class="geo-info">
+                <span id="geo-title">Ubicación desactivada</span>
+                <p id="geo-desc">Actívala para calcular distancias a epicentros e impactos locales.</p>
+              </div>
+              <button class="btn-geo" id="btn-request-geo">Activar</button>
+              <button class="btn-geo btn-geo-clear" id="btn-clear-geo" style="display: none;">Limpiar</button>
+            </div>
+          </div>
+
+          <div class="legend-group">
+            <h3>Escala de Magnitudes</h3>
+            <div class="legend-list">
+              <div class="legend-item"><span class="badge badge-low"></span> M &lt; 4.0: Sismicidad Baja</div>
+              <div class="legend-item"><span class="badge badge-mid"></span> M 4.0 - 5.9: Sismicidad Media</div>
+              <div class="legend-item"><span class="badge badge-high"></span> M &ge; 6.0: Sismicidad Alta</div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+    </main>
+  </div>
+
+  <!-- SOS Floating Action Button -->
+  <div class="sos-fab" id="btn-open-sos" title="Modo Supervivencia SOS">
+    <i class="fa-solid fa-life-ring"></i>
+    <span>SOS</span>
+  </div>
+
+  <!-- SOS Fullscreen Emergency Overlay -->
+  <div class="sos-overlay hidden" id="sos-overlay-panel">
+    <div class="sos-container">
+      
+      <!-- SOS Header -->
+      <header class="sos-header">
+        <div class="sos-title">
+          <i class="fa-solid fa-circle-exclamation animate-flash-fast"></i>
+          <h1>MODO SUPERVIVENCIA</h1>
+        </div>
+        <button class="btn-close-sos" id="btn-close-sos">&times; SALIR</button>
+      </header>
+
+      <!-- SOS Control Hub -->
+      <section class="sos-control-hub">
+        <div class="sos-control-card strobe-control">
+          <h3><i class="fa-solid fa-lightbulb"></i> Baliza Visual</h3>
+          <p>Parpadea la pantalla a alta frecuencia para indicar tu posición en la oscuridad.</p>
+          <div class="safety-warning">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Advertencia: Luz intermitente de alta intensidad.</span>
+          </div>
+          <button class="btn-sos-action" id="btn-toggle-strobe">Activar Linterna Estroboscópica</button>
+        </div>
+
+        <div class="sos-control-card sound-control">
+          <h3><i class="fa-solid fa-bullhorn"></i> Pitido de Rescate</h3>
+          <p>Emite la señal audible internacional de auxilio SOS (<code>... --- ...</code>) a 3000 Hz para atravesar escombros.</p>
+          <button class="btn-sos-action" id="btn-toggle-sound-beacon">Activar Alarma Morse SOS</button>
+        </div>
+
+        <div class="sos-control-card trapped-control">
+          <h3><i class="fa-solid fa-person-falling-burst text-alert"></i> SOS ATRAPADO</h3>
+          <p class="text-alert">EMERGENCIA VITAL - Activa señales múltiples para que rescatistas te encuentren bajo escombros.</p>
+          <div class="safety-warning critical">
+            <i class="fa-solid fa-skull-crossbones"></i>
+            <span>SOLO USAR EN SITUACIÓN DE VIDA O MUERTE</span>
+          </div>
+          <button class="btn-sos-action btn-critical" id="btn-trapped-sos">🆘 ACTIVAR SOS ATRAPADO</button>
+        </div>
+      </section>
+
+      <!-- SOS First Aid Instructions -->
+      <section class="sos-first-aid">
+        <h2><i class="fa-solid fa-kit-medical"></i> Guía de Emergencia & Primeros Auxilios (Offline)</h2>
+        
+        <div class="sos-tabs">
+          <button class="sos-tab-btn active" data-tab="tab-quake">Durante el Sismo</button>
+          <button class="sos-tab-btn" data-tab="tab-bleed">Hemorragias</button>
+          <button class="sos-tab-btn" data-tab="tab-fracture">Fracturas</button>
+          <button class="sos-tab-btn" data-tab="tab-rcp">RCP Básica</button>
+          <button class="sos-tab-btn" data-tab="tab-rescue">Atrapados</button>
+        </div>
+
+        <div class="sos-tab-content active" id="tab-quake">
+          <div class="aid-card">
+            <h3><i class="fa-solid fa-person-falling-burst text-alert"></i> ¿Qué hacer durante el sismo?</h3>
+            <ul>
+              <li><strong>AGÁCHATE</strong>: Colócate sobre tus manos y rodillas antes de que el sismo te bote.</li>
+              <li><strong>CÚBRETE</strong>: Busca refugio bajo una mesa resistente. Protege tu cabeza y cuello con tus brazos.</li>
+              <li><strong>SUJÉTATE</strong>: Agárrate de tu refugio hasta que cese el movimiento.</li>
+              <li><strong>Aléjate</strong> de ventanas, repisas y objetos pesados que puedan caer. No uses ascensores.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sos-tab-content" id="tab-bleed">
+          <div class="aid-card">
+            <h3><i class="fa-solid fa-droplet text-alert"></i> Control de Hemorragias (Sangrado)</h3>
+            <ul>
+              <li><strong>PRESIÓN DIRECTA</strong>: Presiona la herida firmemente con un paño limpio o tus manos. No quites la presión.</li>
+              <li><strong>ELEVACIÓN</strong>: Si es posible, eleva la extremidad afectada por encima del nivel del corazón.</li>
+              <li><strong>TORNIQUETE (Último recurso)</strong>: Si el sangrado es masivo y no cesa en brazos/piernas, coloca un torniquete a 5-7 cm arriba de la herida (nunca en articulaciones) y anota la hora exacta.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sos-tab-content" id="tab-fracture">
+          <div class="aid-card">
+            <h3><i class="fa-solid fa-bone text-warn"></i> Fracturas e Inmovilización</h3>
+            <ul>
+              <li><strong>NO MUEVAS</strong> la extremidad lesionada a menos que sea estrictamente necesario por peligro inminente.</li>
+              <li><strong>INMOVILIZA</strong>: Coloca férulas improvisadas (tablones, cartón grueso, revistas) a ambos lados de la articulación para evitar el movimiento.</li>
+              <li><strong>FRIO LOCAL</strong>: Aplica hielo envuelto en un paño para reducir la inflamación (nunca hielo directo).</li>
+              <li>Si hay hueso expuesto, <strong>no intentes introducirlo</strong>. Cúbrelo con una gasa estéril húmeda y presiona los bordes de la herida para frenar sangrados.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sos-tab-content" id="tab-rcp">
+          <div class="aid-card">
+            <h3><i class="fa-solid fa-heart-pulse text-alert"></i> RCP (Reanimación Cardiopulmonar)</h3>
+            <p class="aid-sub">Aplica solo si la persona no responde y no respira con normalidad.</p>
+            <ul>
+              <li>Coloca a la persona boca arriba sobre una superficie firme.</li>
+              <li>Coloca el talón de una mano en el centro del pecho y la otra mano encima.</li>
+              <li>Realiza <strong>30 compresiones torácicas</strong> rápidas y profundas (de 5 a 6 cm a un ritmo de 100-120 por minuto).</li>
+              <li>Realiza <strong>2 insuflaciones de rescate</strong> (boca a boca) tapando la nariz de la víctima.</li>
+              <li>Repite el ciclo (30:2) de manera ininterrumpida hasta que llegue ayuda médica o la víctima reaccione.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sos-tab-content" id="tab-rescue">
+          <div class="aid-card">
+            <h3><i class="fa-solid fa-people-group text-info"></i> Si te encuentras atrapado en escombros</h3>
+            <ul>
+              <li><strong>MANTÉN LA CALMA</strong> para conservar oxígeno y energía.</li>
+              <li><strong>CUBRE</strong> tu nariz y boca con tu ropa para evitar respirar polvo o humo.</li>
+              <li><strong>SEÑAL ACÚSTICA</strong>: Golpea tubos, vigas o paredes metálicas en series de tres golpes rítmicos cada pocos minutos. Esto viaja mucho más que la voz.</li>
+              <li><strong>EVITA GRITAR</strong> a menos que escuches a alguien muy cerca; gritar te deshidrata y gasta oxígeno rápidamente.</li>
+              <li>Usa silbatos, linternas o el pitido SOS de esta app si están accesibles.</li>
+            </ul>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+
+  <!-- SOS Fullscreen Strobe Flashing Layer (Beacon) -->
+  <div class="sos-strobe-layer" id="sos-strobe-layer">
+    <button class="strobe-cancel-btn" id="btn-stop-strobe-layer">Desactivar Baliza</button>
+  </div>
+
+  <!-- Footer con derechos de autor -->
+  <footer class="app-footer">
+    <p>© <span id="current-year"></span> Cesar Sarmiento. Todos los derechos reservados.</p>
+    <p class="footer-sub">Sistema de Alerta Sísmica en Tiempo Real para Venezuela</p>
+  </footer>
+
+  <!-- Script para actualizar año automáticamente -->
+  <script>
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+  </script>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
+  
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        // Usar firebase-messaging-sw.js que incluye Firebase y las funciones de sw.js
+        navigator.serviceWorker.register('/firebase-messaging-sw.js')
+          .then((registration) => {
+            console.log('Service Worker registrado con éxito:', registration.scope);
+          })
+          .catch((error) => {
+            console.error('Error registrando Service Worker:', error);
+          });
+      });
+    }
+  </script>
+  
+  <!-- Local Javascript logic -->
+  <script src="script.js"></script>
+</body>
+</html>

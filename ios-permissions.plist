@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Permisos de Geolocalización -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>ONDA necesita tu ubicación para calcular distancias a sismos cercanos y proporcionarte alertas sísmicas en tiempo real.</string>
+    
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>ONDA necesita tu ubicación en segundo plano para enviarte alertas sísmicas incluso cuando la app está cerrada.</string>
+    
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>ONDA necesita acceso continuo a tu ubicación para monitorear sismos cercanos en tiempo real.</string>
+    
+    <!-- Permisos de Notificaciones -->
+    <key>NSUserNotificationAlertStyle</key>
+    <string>alert</string>
+    
+    <!-- Permisos de Audio -->
+    <key>NSMicrophoneUsageDescription</key>
+    <string>ONDA necesita acceso al micrófono para funciones de emergencia SOS.</string>
+    
+    <!-- Permisos de Cámara (para linterna SOS) -->
+    <key>NSCameraUsageDescription</key>
+    <string>ONDA necesita acceso a la cámara para activar la linterna en modo de emergencia SOS.</string>
+    
+    <!-- Permisos de Vibración -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>fetch</string>
+        <string>remote-notification</string>
+        <string>location</string>
+    </array>
+    
+    <!-- Configuración de App -->
+    <key>CFBundleDisplayName</key>
+    <string>ONDA</string>
+    
+    <key>CFBundleIdentifier</key>
+    <string>com.ondaseismic.app</string>
+    
+    <key>CFBundleVersion</key>
+    <string>1.0.0</string>
+    
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    
+    <key>UIRequiredDeviceCapabilities</key>
+    <array>
+        <string>armv7</string>
+    </array>
+    
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
+    
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationPortraitUpsideDown</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    
+    <!-- Configuración de Status Bar -->
+    <key>UIStatusBarStyle</key>
+    <string>UIStatusBarStyleLightContent</string>
+    
+    <key>UIViewControllerBasedStatusBarAppearance</key>
+    <false/>
+    
+    <!-- Configuración de Launch Screen -->
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+</dict>
+</plist>

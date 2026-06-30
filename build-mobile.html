@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build Completo - ONDA Móvil</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0d1424;
+      color: #ffffff;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #00ff66;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: #888d99;
+      margin-bottom: 30px;
+    }
+    
+    .progress-section {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+    
+    .progress-bar-container {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      height: 30px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    
+    #progress-bar {
+      background: linear-gradient(135deg, #00ff66, #00a8ff);
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    
+    #progress-text {
+      text-align: center;
+      font-weight: bold;
+      color: #00ff66;
+    }
+    
+    #steps-container {
+      display: grid;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .step-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+    
+    .step-number {
+      background: linear-gradient(135deg, #00ff66, #00a8ff);
+      color: #0d1424;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    
+    .step-header h3 {
+      margin: 0;
+      color: #ffffff;
+      flex-grow: 1;
+    }
+    
+    .step-checkbox {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
+    
+    .step-description {
+      color: #888d99;
+      margin-bottom: 15px;
+      margin-left: 55px;
+    }
+    
+    .step-action-btn {
+      background: #00ff66;
+      border: none;
+      border-radius: 5px;
+      color: #0d1424;
+      font-weight: bold;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-left: 55px;
+    }
+    
+    .step-action-btn:hover {
+      background: #00a8ff;
+    }
+    
+    .actions-section {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    
+    .action-btn {
+      padding: 15px 40px;
+      font-size: 18px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #00ff66, #00a8ff);
+      border: none;
+      border-radius: 10px;
+      color: #0d1424;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      margin: 10px;
+    }
+    
+    .action-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    #completion-message {
+      display: none;
+      background: rgba(0, 255, 102, 0.2);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 20px;
+      border: 2px solid #00ff66;
+    }
+    
+    #completion-message h2 {
+      color: #00ff66;
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 Build Completo - ONDA Móvil</h1>
+  <p class="subtitle">Sigue estos pasos para convertir ONDA en app móvil</p>
+  
+  <div class="progress-section">
+    <div class="progress-bar-container">
+      <div id="progress-bar"></div>
+    </div>
+    <div id="progress-text">0/7 pasos completados (0%)</div>
+  </div>
+  
+  <div id="completion-message">
+    <h2>🎉 ¡Build Completado!</h2>
+    <p>Todos los pasos han sido completados. Tu app ONDA está lista para móvil.</p>
+  </div>
+  
+  <div id="steps-container"></div>
+  
+  <div class="actions-section">
+    <button class="action-btn" onclick="generateReport()">📄 Generar Reporte</button>
+    <button class="action-btn" onclick="window.open('GUIA-CONVERSION-MOVIL.md', '_blank')">📖 Ver Guía Completa</button>
+    <button class="action-btn" onclick="window.open('INSTRUCCIONES-DESPLIEGUE-PWA.md', '_blank')">🌐 Instrucciones PWA</button>
+  </div>
+  
+  <script src="build-mobile.js"></script>
+  <script>
+    renderSteps();
+  </script>
+</body>
+</html>

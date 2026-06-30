@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Fondo oscuro -->
+  <rect width="512" height="512" fill="#0d1424"/>
+  
+  <!-- Círculo central con gradiente -->
+  <defs>
+    <radialGradient id="pulse-gradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00ff66" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#00a8ff" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#0d1424" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Ondas sísmicas -->
+  <circle cx="256" cy="256" r="200" fill="url(#pulse-gradient)" opacity="0.3"/>
+  <circle cx="256" cy="256" r="150" fill="url(#pulse-gradient)" opacity="0.5"/>
+  <circle cx="256" cy="256" r="100" fill="url(#pulse-gradient)" opacity="0.7"/>
+  
+  <!-- Texto ONDA -->
+  <text x="256" y="280" font-family="Arial, sans-serif" font-size="120" font-weight="bold" fill="#ffffff" text-anchor="middle">ONDA</text>
+  
+  <!-- Subtítulo -->
+  <text x="256" y="330" font-family="Arial, sans-serif" font-size="24" fill="#888d99" text-anchor="middle">ALERTA SÍSMICA</text>
+  
+  <!-- Icono de onda sísmica -->
+  <path d="M 156 380 Q 206 320 256 380 Q 306 440 356 380" stroke="#00ff66" stroke-width="8" fill="none" stroke-linecap="round"/>
+</svg>

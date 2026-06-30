@@ -1,0 +1,50 @@
+[build]
+  publish = "."
+  command = ""
+
+[context.production]
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Content-Security-Policy = "default-src 'self' https: 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://www.gstatic.com https://*.firebaseio.com https://*.firebaseapp.com; img-src 'self' data: https: https://unpkg.com; font-src 'self' https: https://unpkg.com; connect-src 'self' https: https://earthquake.usgs.gov https://www.seismicportal.eu https://*.firebaseio.com https://*.firebaseapp.com https://fcm.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: https://unpkg.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https: https://unpkg.com;"
+
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.json"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "firebase-messaging-sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Service-Worker-Allowed = "/"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false

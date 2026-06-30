@@ -1,0 +1,87 @@
+{
+  "name": "ONDA - Sistema de Alerta Sísmica",
+  "short_name": "ONDA",
+  "description": "Sistema de alerta sísmica en tiempo real para Venezuela con modo de emergencia SOS",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "display_override": ["standalone", "window-controls-overlay", "minimal-ui"],
+  "background_color": "#0d1424",
+  "theme_color": "#0d1424",
+  "orientation": "portrait-primary",
+  "scope": "./",
+  "lang": "es",
+  "dir": "ltr",
+  "gcm_sender_id": "103953800507",
+  "icons": [
+    {
+      "src": "icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "emergency",
+    "news",
+    "utilities"
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Modo SOS",
+      "short_name": "SOS",
+      "description": "Activar modo de emergencia SOS",
+      "url": "./index.html?sos=true",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

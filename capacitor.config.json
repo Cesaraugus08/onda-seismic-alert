@@ -1,0 +1,48 @@
+{
+  "appId": "com.ondaseismic.app",
+  "appName": "ONDA",
+  "webDir": "./",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true,
+    "iosScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": true,
+      "backgroundColor": "#0d1424",
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
+      "iosSplashStyle": "SCREEN",
+      "iosSplashImagename": "splash"
+    },
+    "LocalNotifications": {
+      "smallIcon": "icon-96",
+      "iconColor": "#0d1424",
+      "sound": "default"
+    },
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    },
+    "Geolocation": {
+      "permissions": ["location", "coarseLocation"]
+    },
+    "StatusBar": {
+      "style": "DARK"
+    },
+    "App": {
+      "loadingText": "Cargando ONDA...",
+      "loadingBackgroundColor": "#0d1424",
+      "loadingSpinnerColor": "#00ff66"
+    }
+  },
+  "android": {
+    "buildOptions": {
+      "keystorePath": "android.keystore",
+      "keystoreAlias": "onda",
+      "keystoreAliasPassword": "onda123",
+      "keystorePassword": "onda123"
+    }
+  }
+}
