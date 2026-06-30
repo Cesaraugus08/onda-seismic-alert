@@ -944,6 +944,36 @@ body {
 
 /* --- Responsive para móvil --- */
 @media (max-width: 768px) {
+  .dashboard-wrapper {
+    padding: 16px;
+  }
+  
+  .app-header {
+    padding: 8px 12px;
+  }
+  
+  .brand h1 {
+    font-size: 1.4rem;
+  }
+  
+  .brand .tagline {
+    font-size: 0.65rem;
+    padding-left: 8px;
+  }
+  
+  .system-status {
+    padding: 4px 10px;
+  }
+  
+  .api-selector select {
+    font-size: 0.65rem;
+    padding: 3px 6px;
+  }
+  
+  .last-update {
+    font-size: 0.6rem;
+  }
+  
   .smart-alert-overlay {
     padding: 16px;
   }
@@ -1035,6 +1065,106 @@ body {
   
   .audio-ambient-status span {
     font-size: 0.75rem;
+  }
+  
+  .panel {
+    border-radius: 12px;
+  }
+  
+  .panel-header {
+    padding: 12px 16px;
+  }
+  
+  .panel-header h2 {
+    font-size: 0.9rem;
+  }
+  
+  .panel-content {
+    padding: 16px;
+  }
+  
+  .eq-item {
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  
+  .eq-item-mag {
+    width: 42px;
+    height: 42px;
+    font-size: 1rem;
+  }
+  
+  .eq-item-loc {
+    font-size: 0.8rem;
+  }
+  
+  .eq-item-meta {
+    font-size: 0.68rem;
+  }
+  
+  .stat-card {
+    padding: 12px 16px;
+  }
+  
+  .stat-label {
+    font-size: 0.7rem;
+  }
+  
+  .stat-val {
+    font-size: 1.8rem;
+  }
+  
+  .stat-desc {
+    font-size: 0.68rem;
+  }
+  
+  .map-panel {
+    min-height: 300px;
+  }
+  
+  .proximity-banner {
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    padding: 12px 16px;
+  }
+  
+  .proximity-text {
+    font-size: 0.8rem;
+  }
+  
+  .control-group h3 {
+    font-size: 0.75rem;
+  }
+  
+  .control-desc {
+    font-size: 0.68rem;
+  }
+  
+  .btn-sim {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+  
+  .geo-status {
+    padding: 10px;
+  }
+  
+  #geo-title {
+    font-size: 0.72rem;
+  }
+  
+  #geo-desc {
+    font-size: 0.6rem;
+  }
+  
+  .btn-geo {
+    padding: 4px 8px;
+    font-size: 0.68rem;
+  }
+  
+  .legend-item {
+    font-size: 0.68rem;
   }
 }
 
@@ -1719,6 +1849,84 @@ body {
 @media (max-width: 768px) {
   .sos-control-hub {
     grid-template-columns: 1fr;
+  }
+  
+  .sos-overlay {
+    padding: 20px 16px;
+  }
+  
+  .sos-container {
+    max-width: 100%;
+  }
+  
+  .sos-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .sos-title h1 {
+    font-size: 1.3rem;
+  }
+  
+  .sos-control-card {
+    padding: 16px;
+  }
+  
+  .sos-control-card h3 {
+    font-size: 1rem;
+  }
+  
+  .sos-control-card p {
+    font-size: 0.75rem;
+  }
+  
+  .sos-first-aid {
+    padding: 16px;
+  }
+  
+  .sos-first-aid h2 {
+    font-size: 1rem;
+  }
+  
+  .sos-tab-btn {
+    padding: 6px 12px;
+    font-size: 0.7rem;
+  }
+  
+  .aid-card h3 {
+    font-size: 0.9rem;
+  }
+  
+  .aid-card li {
+    font-size: 0.8rem;
+  }
+  
+  .strobe-cancel-btn {
+    padding: 16px 32px;
+    font-size: 1rem;
+  }
+  
+  .connection-notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+    padding: 12px 16px;
+  }
+  
+  .connection-notification span {
+    font-size: 0.8rem;
+  }
+  
+  .quick-alert-banner {
+    top: 10px;
+    width: 95%;
+    max-width: none;
+  }
+  
+  .quick-alert-banner .alert-header {
+    padding: 12px 16px;
   }
 }
 
